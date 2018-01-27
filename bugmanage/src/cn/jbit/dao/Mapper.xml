@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jbit.dao.Mapper">
+
+
+		<!--  动态查询 | 查询所有bug/根据项目查询bug -->
+		<select id="selBugDetail" resultType="BugDetail">
+			SELECT id,projectId, (CASE severity  WHEN '10' THEN '文字错误'
+				      WHEN '20' THEN '次要错误'
+				      WHEN '30' THEN '重要错误' END ) AS severity  ,title,reportUser,createDate FROM bug_detail
+				      where 1=1
+				<if test="id>0">
+					and projectId=#{id}
+				</if>  
+		</select>
+		
+		<!--  查询所有项目信息-->
+		<select id="selBugProject" resultType="BugProject">
+			SELECT * FROM bug_project
+		</select>
+		
+		<!-- 添加bug详情 -->
+		<insert id="addBugDetail" parameterType="BugDetail">
+			INSERT INTO `bug_detail` (
+ 				`projectId`,
+  				`severity`,
+  				`title`,
+ 				`reportUser`,
+  				`createDate`) 
+			VALUES
+  			  (  #{projectId},
+    			 #{severity},
+    			 #{title},
+    			 #{reportUser},
+    			 #{createDate}  ) ;
+		</insert>
+		
+</mapper>
